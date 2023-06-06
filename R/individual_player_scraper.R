@@ -1,6 +1,22 @@
 ## player information scraper (birth date, position, etc.)
 player_info_scraper <- function(website) {
+  page <- rvest::read_html(website)
 
+  messy_info_table <- page %>%
+    rvest::html_elements("div[class='ep-list']") %>%
+    rvest::html_elements("div[class^='order']") %>%
+    purrr::map_df(., .f = .player_info_cleaner) %>%
+    dplyr::filter(Attribute != "Highlights")
+}
+
+.player_info_cleaner <- function(html_node) {
+  html_node %>%
+    rvest::html_children() %>%
+    rvest::html_text() %>%
+    trimws() %>%
+    set_names(c("Attribute", "Value")) %>%
+    t() %>%
+    data.frame()
 }
 
 
