@@ -8,9 +8,9 @@ player_info_scraper <- function(website) {
     purrr::map_df(., .f = .player_info_cleaner)
 
   clean_info_table <- messy_info_table %>%
-    dplyr::filter(attribute != "Highlights") %>%
     dplyr::mutate(attribute = tolower(gsub(" ", "_", attribute))) %>%
-    tidyr::pivot_wider(names_from = "attribute", values_from = "value")
+    tidyr::pivot_wider(names_from = "attribute", values_from = "value") %>%
+    cbind(.player_name(website, page), .)
 }
 
 .player_info_cleaner <- function(html_node) {
@@ -51,12 +51,13 @@ player_stats_scraper <- function(website) {
     rvest::html_elements("table[class*='player-stats']") %>%
     rvest::html_table(fill = TRUE) %>%
     magrittr::extract2(1) %>%
-    set_names(gsub("^$", "NA", names(.)))
+    set_names(gsub("^$", "NA", names(.))) %>%
+    cbind(.player_name(website, page), .)
 
   player_tables <- list(
-    dplyr::select(raw_player_table, S:POST) %>%
+    dplyr::select(raw_player_table, id:POST) %>%
       dplyr::select(., -(dplyr::last_col(offset=1):dplyr::last_col())),
-    dplyr::select(raw_player_table, S:League, POST:dplyr::last_col()) %>%
+    dplyr::select(raw_player_table, id:League, POST:dplyr::last_col()) %>%
       dplyr::select(-POST)
   )
 
