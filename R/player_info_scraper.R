@@ -5,12 +5,27 @@ player_info_scraper <- function(website) {
   messy_info_table <- page %>%
     rvest::html_elements("div[class='ep-list']") %>%
     rvest::html_elements("div[class^='order']") %>%
-    purrr::map_df(., .f = .player_info_cleaner)
+    purrr::map_df(., .f = .player_info_cleaner) %>%
+    dplyr::left_join(data.frame(attribute = player_info_vector), ., by = "attribute")
+  # player_info_vector is internal vector with player info attributes
 
   clean_info_table <- messy_info_table %>%
     dplyr::mutate(attribute = tolower(gsub(" ", "_", attribute))) %>%
+    dplyr::filter(attribute != "highlights") %>%
     tidyr::pivot_wider(names_from = "attribute", values_from = "value") %>%
-    cbind(.player_name(website, page), .)
+    cbind(.player_name(website, page), .) %>%
+    dplyr::mutate(height = height %>%
+                    stringr::str_extract(., "[0-9]+ cm") %>%
+                    gsub(" cm", "", .),
+                  weight = weight %>%
+                    stringr::str_extract(., "[0-9]+ lbs") %>%
+                    gsub(" lb", "", .),
+                  cap_hit = cap_hit %>%
+                    stringr::str_extract(., "^\\$[0-9,]+") %>%
+                    gsub("\\$|,", "", .),
+                  drafted = gsub("(round)|(#)|(overall by)", "", drafted)) %>%
+    tidyr::separate(drafted, sep = "\\s+", extra = "merge", fill = "left",
+                    into = paste("draft", c("year", "round", "pick", "team"), sep = "_"))
 }
 
 .player_info_cleaner <- function(html_node) {
