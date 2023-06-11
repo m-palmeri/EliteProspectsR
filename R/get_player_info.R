@@ -1,5 +1,5 @@
 ## player information scraper (birth date, position, etc.)
-player_info_scraper <- function(website) {
+get_player_info <- function(website) {
   page <- rvest::read_html(website)
 
   messy_info_table <- page %>%
