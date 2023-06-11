@@ -1,4 +1,4 @@
-player_stats_scraper <- function(website) {
+get_player_stats <- function(website) {
   page <- rvest::read_html(website)
 
   raw_player_table <- page %>%
