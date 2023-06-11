@@ -6,7 +6,7 @@ get_player_stats <- function(website) {
     rvest::html_elements("table[class*='player-stats']") %>%
     rvest::html_table(fill = TRUE) %>%
     magrittr::extract2(1) %>%
-    set_names(gsub("^$", "NA", names(.))) %>%
+    magrittr::set_names(gsub("^$", "NA", names(.))) %>%
     cbind(.player_name(website, page), .)
 
   player_tables <- list(
@@ -16,7 +16,9 @@ get_player_stats <- function(website) {
       dplyr::select(-POST)
   )
 
-  clean_player_table <- purrr::map(player_tables, .player_stats_cleaner)
+  clean_player_table <- purrr::map(player_tables, .player_stats_cleaner) %>%
+    magrittr::set_names(c("Regular Season", "Playoffs")) %>%
+    Filter(function(x) nrow(x) > 0, .)
 
   return(clean_player_table)
 }
