@@ -19,13 +19,16 @@ get_player_info <- function(website) {
                     gsub(" cm", "", .),
                   weight = weight %>%
                     stringr::str_extract(., "[0-9]+ lbs") %>%
-                    gsub(" lb", "", .),
+                    gsub(" lbs", "", .),
                   cap_hit = cap_hit %>%
                     stringr::str_extract(., "^\\$[0-9,]+") %>%
                     gsub("\\$|,", "", .),
                   drafted = gsub("(round)|(#)|(overall by)", "", drafted)) %>%
     tidyr::separate(drafted, sep = "\\s+", extra = "merge", fill = "left",
-                    into = paste("draft", c("year", "round", "pick", "team"), sep = "_"))
+                    into = paste("draft", c("year", "round", "pick", "team"), sep = "_")) %>%
+    dplyr::mutate(dplyr::across(c(age, height, weight, cap_hit, draft_year, draft_round, draft_pick),
+                                as.numeric)) %>%
+    replace(., . == "-", NA)
 }
 
 .player_info_cleaner <- function(html_node) {
@@ -33,7 +36,7 @@ get_player_info <- function(website) {
     rvest::html_children() %>%
     rvest::html_text() %>%
     trimws() %>%
-    set_names(c("attribute", "value")) %>%
+    magrittr::set_names(c("attribute", "value")) %>%
     t() %>%
     data.frame()
 }
