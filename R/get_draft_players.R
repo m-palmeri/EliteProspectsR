@@ -23,7 +23,13 @@ get_draft_players <- function(website = NULL, draft_year = NULL) {
     dplyr::filter(!grepl("ROUND", player)) %>%
     dplyr::mutate(overall_pick = gsub("\\#", "", overall_pick),
                   overall_pick = as.numeric(overall_pick),
-                  player = gsub("\\(.*\\)", "", player))
+                  player = gsub("\\(.*\\)", "", player),
+                  player = trimws(player))
 
   #getting links for players
+  player_links <- page %>%
+    rvest::html_elements("div[id='drafted-players']") %>%
+    rvest::html_elements("table") %>%
+    rvest::html_elements("a[href*='player']") %>%
+    rvest::html_attr("href")
 }
