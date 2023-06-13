@@ -32,4 +32,10 @@ get_draft_players <- function(website = NULL, draft_year = NULL) {
     rvest::html_elements("table") %>%
     rvest::html_elements("a[href*='player']") %>%
     rvest::html_attr("href")
+
+
+  full_player_table <- player_table %>%
+    cbind(link = player_links)
+
+  return(full_player_table)
 }
