@@ -1,7 +1,8 @@
 get_draft_players <- function(website = NULL, draft_year = NULL) {
   ## input checks
-  assertthat::assert_that(!is.null(website) & !is.null(draft_year),
-                          "Please use either the `website` or the `draft_year` parameter")
+  if (!is.null(website) & !is.null(draft_year)) stop("Please use either the `website` or the `draft_year` parameter, not both")
+  if (is.null(website) & is.null(draft_year)) stop("Please supply either `website` or `draft_year`")
+
 
   if (!is.null(draft_year)) {
     website <- paste0("https://www.eliteprospects.com/draft/nhl-entry-draft/", draft_year)
@@ -24,7 +25,8 @@ get_draft_players <- function(website = NULL, draft_year = NULL) {
     dplyr::mutate(overall_pick = gsub("\\#", "", overall_pick),
                   overall_pick = as.numeric(overall_pick),
                   player = gsub("\\(.*\\)", "", player),
-                  player = trimws(player))
+                  player = trimws(player)) %>%
+    dplyr::filter(player != "No selection was made")
 
   #getting links for players
   player_links <- page %>%
