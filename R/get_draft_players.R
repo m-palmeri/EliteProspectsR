@@ -1,4 +1,4 @@
-get_draft_players <- function(website = NULL, draft_year = NULL) {
+get_draft_players <- function(website = NULL, draft_year = 2020) {
   ## input checks
   if (!is.null(website) & !is.null(draft_year)) stop("Please use either the `website` or the `draft_year` parameter, not both")
   if (is.null(website) & is.null(draft_year)) stop("Please supply either `website` or `draft_year`")
