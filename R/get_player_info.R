@@ -29,6 +29,8 @@ get_player_info <- function(website) {
     dplyr::mutate(dplyr::across(c(age, height, weight, cap_hit, draft_year, draft_round, draft_pick),
                                 as.numeric)) %>%
     replace(., . == "-", NA)
+
+  return(clean_info_table)
 }
 
 .player_info_cleaner <- function(html_node) {
