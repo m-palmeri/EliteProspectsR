@@ -66,12 +66,12 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
     dplyr::rename_with(tolower)
   names(skater_table) <- gsub("\\+/-", "plus_minus", names(skater_table))
 
-  player_links <- .get_league_skater_links(table_setup, "player")
+  player_links <- .get_table_links(table_setup, "player")
   skater_table <- dplyr::mutate(skater_table, player_link = player_links)
   char_vec <- c("player", "player_link")
 
   if ("team" %in% names(skater_table)) {
-    team_links <- .get_league_skater_links(table_setup, "team")
+    team_links <- .get_table_links(table_setup, "team")
     skater_table <- dplyr::mutate(skater_table, team_link = team_links)
     char_vec <- c(char_vec, "team", "team_link")
   }
@@ -83,14 +83,4 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
                   dplyr::across(games_played:tidyselect::last_col(), as.numeric))
 
   return(full_skater_table)
-}
-
-
-.get_league_skater_links <- function(table_setup, finder) {
-  table_setup %>%
-    rvest::html_elements("tbody") %>%
-    rvest::html_elements("tr") %>%
-    rvest::html_element(glue::glue("td[class='{finder}']")) %>%
-    rvest::html_element(glue::glue("a[href*='{finder}']")) %>%
-    rvest::html_attr("href")
 }
