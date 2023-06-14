@@ -2,7 +2,6 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom Hmisc %nin%
 #' @importFrom magrittr %>%
 #' @importFrom purrr %||%
 ## usethis namespace: end
