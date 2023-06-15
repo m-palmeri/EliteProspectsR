@@ -1,7 +1,4 @@
-test_players <- c("https://www.eliteprospects.com/player/183442/connor-mcdavid",
-                  "https://www.eliteprospects.com/player/289172/nicholas-west",
-                  "https://www.eliteprospects.com/player/29626/filip-forsberg",
-                  "https://www.eliteprospects.com/player/68038/john-blum")
+
 
 test_that("Connor McDavid Tests", {
   player_info <- get_player_info("https://www.eliteprospects.com/player/183442/connor-mcdavid")
@@ -45,4 +42,21 @@ test_that("Nicholas West Tests", {
   expect_na(player_info$draft_year)
   expect_na(player_info$agency)
   expect_equal(player_info$status, "Retired")
+})
+
+test_that("Pekka Rinne Tests", {
+  player_info <- get_player_info("https://www.eliteprospects.com/player/4282/pekka-rinne")
+
+  expect_equal(player_info$position, "G")
+  expect_equal(player_info$youth_team, "Kempeleen Kiekko-Ketut")
+  expect_equal(player_info$draft_year, 2004)
+})
+
+test_that("Tommy Green Tests", {
+  player_info <- get_player_info("https://www.eliteprospects.com/player/96540/tommy-green")
+
+  expect_equal(player_info$position, "G")
+  expect_na(player_info$height)
+  expect_na(player_info$place_of_birth)
+  expect_na(player_info$draft_round)
 })
