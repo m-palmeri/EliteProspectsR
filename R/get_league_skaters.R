@@ -63,7 +63,8 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
                   assists = A,
                   points = TP,
                   penalty_minutes = PIM) %>%
-    dplyr::rename_with(tolower)
+    dplyr::rename_with(tolower) %>%
+  dplyr::filter(games_played != "")
   names(skater_table) <- gsub("\\+/-", "plus_minus", names(skater_table))
 
   player_links <- .get_table_links(table_setup, "player")
@@ -77,7 +78,6 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
   }
 
   full_skater_table <- skater_table %>%
-    dplyr::filter(games_played != "") %>%
     dplyr::select(rank, tidyselect::all_of(char_vec), tidyselect::everything()) %>%
     dplyr::mutate(dplyr::across(tidyselect::all_of(char_vec), as.character),
                   dplyr::across(games_played:tidyselect::last_col(), as.numeric))

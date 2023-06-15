@@ -1,4 +1,11 @@
 get_draft_players <- function(website = NULL, draft_year = 2020) {
+
+  function_call <- match.call()
+  # setting league and season to NULL if only website is specified
+  if ("website" %in% names(function_call) & !("draft_year" %in% names(function_call))) {
+    draft_year <- NULL
+  }
+
   ## input checks
   if (!is.null(website) & !is.null(draft_year)) stop("Please use either the `website` or the `draft_year` parameter, not both")
   if (is.null(website) & is.null(draft_year)) stop("Please supply either `website` or `draft_year`")
@@ -12,9 +19,11 @@ get_draft_players <- function(website = NULL, draft_year = 2020) {
   page <- rvest::read_html(website)
 
   #getting player info part of table
-  player_table <- page %>%
+  table_setup <- page %>%
     rvest::html_elements("div[id='drafted-players']") %>%
-    rvest::html_elements("table") %>%
+    rvest::html_elements("table")
+
+  player_table <- table_setup %>%
     rvest::html_table(fill = T) %>%
     magrittr::extract2(1)
   names(player_table)[1:2] <- c("overall_pick", "remove")
@@ -28,16 +37,16 @@ get_draft_players <- function(website = NULL, draft_year = 2020) {
                   player = trimws(player))
 
   #getting links for players
-  player_links <- page %>%
-    rvest::html_elements("div[id='drafted-players']") %>%
-    rvest::html_elements("table") %>%
-    rvest::html_elements("td[class='player']") %>%
-    rvest::html_element("a[href*='player']") %>%
-    rvest::html_attr("href")
+  player_links <- .get_table_links(table_setup, "player")
+  team_links <- .get_table_links(table_setup, "team")
 
 
   full_player_table <- player_table %>%
-    cbind(link = player_links)
+    dplyr::mutate(player_link = player_links) %>%
+    dplyr::mutate(team_link = team_links) %>%
+    dplyr::select(overall_pick, player, player_link, team, team_link)
 
   return(full_player_table)
 }
+
+
