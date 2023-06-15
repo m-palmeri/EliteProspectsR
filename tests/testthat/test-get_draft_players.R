@@ -14,7 +14,7 @@ test_that("2022 draft check", {
 
   expect_equal(nrow(draft_table), 225)
   expect_equal(draft_table$player[2], "Simon Nemec")
-  expect_match(draft_table$link[30], "brad-lambert$")
+  expect_match(draft_table$player_link[30], "brad-lambert$")
 })
 
 test_that("2021 draft full check", {
