@@ -16,11 +16,13 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
     magrittr::divide_by(100) %>%
     ceiling()
 
-  full_player_list <- purrr::map_df(1:number_of_pages, .f = function(page_num) {
+  full_skater_list <- purrr::map_df(1:number_of_pages, .f = function(page_num) {
     suppressWarnings(
       .get_league_skaters_helper(paste0(website, "?page=", page_num))
     )
   })
+
+  return(full_skater_list)
 
 }
 
@@ -43,7 +45,7 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
                   points = TP,
                   penalty_minutes = PIM) %>%
     dplyr::rename_with(tolower) %>%
-  dplyr::filter(games_played != "")
+    dplyr::filter(games_played != "")
   names(skater_table) <- gsub("\\+/-", "plus_minus", names(skater_table))
 
   player_links <- .get_table_links(table_setup, "player")
