@@ -1,7 +1,3 @@
-test_players <- c("https://www.eliteprospects.com/player/183442/connor-mcdavid",
-                  "https://www.eliteprospects.com/player/289172/nicholas-west",
-                  "https://www.eliteprospects.com/player/29626/filip-forsberg",
-                  "https://www.eliteprospects.com/player/68038/john-blum")
 
 
 test_that("deeper test of output", {
@@ -13,7 +9,8 @@ test_that("deeper test of output", {
   expect_false(any(is.na(stats$season)))
 
   #type checks
-  column_types <- sapply(stats, class)
+  column_types <- sapply(stats, class) %>%
+    unname()
   expect_equal(column_types,
                c("numeric", rep("character", 5), rep("numeric", 6)))
 
@@ -29,7 +26,7 @@ test_that("Connor McDavid Test", {
   playoffs <- current_pull[[2]] %>%
     dplyr::filter(season %in% paste0("20", 11:20, "-", 12:21))
 
-  comparative <- load_test_rds("connor-mcdavid-data.rds")
+  comparative <- load_test_rds("connor_mcdavid_data.rds")
 
   expect_equal(reg_season, comparative[[1]])
   expect_equal(playoffs, comparative[[2]])
@@ -39,7 +36,7 @@ test_that("Connor McDavid Test", {
 test_that("Nicholas West Test", {
   current_pull <- get_player_stats("https://www.eliteprospects.com/player/289172/nicholas-west")
 
-  comparative <- load_test_rds("nicholas-west-data.rds")
+  comparative <- load_test_rds("nicholas_west_data.rds")
 
   expect_equal(current_pull[[1]], comparative[[1]])
 })
@@ -54,7 +51,7 @@ test_that("Filip Forsberg Test", {
   playoffs <- current_pull[[2]] %>%
     dplyr::filter(season %in% paste0("20", 11:20, "-", 12:21))
 
-  comparative <- load_test_rds("filip-forsberg-data.rds")
+  comparative <- load_test_rds("filip_forsberg_data.rds")
 
   expect_equal(reg_season, comparative[[1]])
   expect_equal(playoffs, comparative[[2]])
@@ -64,7 +61,26 @@ test_that("Filip Forsberg Test", {
 test_that("John Blum Test", {
   current_pull <- get_player_stats("https://www.eliteprospects.com/player/68038/john-blum")
 
-  comparative <- load_test_rds("john-blum-data.rds")
+  comparative <- load_test_rds("john_blum_data.rds")
+
+  expect_equal(current_pull[[1]], comparative[[1]])
+  expect_equal(current_pull[[2]], comparative[[2]])
+})
+
+
+test_that("Pekka Rinne Tests", {
+  current_pull <- suppressWarnings(get_player_stats("https://www.eliteprospects.com/player/4282/pekka-rinne"))
+
+  comparative <- load_test_rds("pekka_rinne_data.rds")
+
+  expect_equal(current_pull[[1]], comparative[[1]])
+  expect_equal(current_pull[[2]], comparative[[2]])
+})
+
+test_that("Tommy Green Tests", {
+  current_pull <- get_player_stats("https://www.eliteprospects.com/player/96540/tommy-green")
+
+  comparative <- load_test_rds("tommy_green_data.rds")
 
   expect_equal(current_pull[[1]], comparative[[1]])
   expect_equal(current_pull[[2]], comparative[[2]])
