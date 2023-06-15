@@ -20,7 +20,7 @@ test_that("2022 draft check", {
 test_that("2021 draft full check", {
   draft_table <- get_draft_players(draft_year = 2021)
 
-  comp <- load_test_rds("2021_draft_table.rds")
+  comp <- load_test_rds("2021_nhl_draft_table.rds")
 
   expect_equal(draft_table, comp)
 })
@@ -28,7 +28,7 @@ test_that("2021 draft full check", {
 test_that("2020 draft full check", {
   draft_table <- get_draft_players(draft_year = 2020)
 
-  comp <- load_test_rds("2020_draft_table.rds")
+  comp <- load_test_rds("2020_nhl_draft_table.rds")
 
   expect_equal(draft_table, comp)
 })
