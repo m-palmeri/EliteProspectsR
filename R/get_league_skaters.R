@@ -16,6 +16,8 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
     magrittr::divide_by(100) %>%
     ceiling()
 
+  if (length(number_of_pages) == 0) number_of_pages <- 1
+
   full_skater_list <- purrr::map_df(1:number_of_pages, .f = function(page_num) {
     suppressWarnings(
       .get_league_skaters_helper(paste0(website, "?page=", page_num))

@@ -16,6 +16,8 @@ get_league_goalies <- function(website = NULL, league = "NHL", season = "2022-20
     magrittr::divide_by(100) %>%
     ceiling()
 
+  if (length(number_of_pages) == 0) number_of_pages <- 1
+
   full_goalie_list <- purrr::map_df(1:number_of_pages, .f = function(page_num) {
     suppressWarnings(
       .get_league_goalie_helper(paste0(website, "?sort-goalie-stats=svp&page-goalie=", page_num))
@@ -62,7 +64,8 @@ get_league_goalies <- function(website = NULL, league = "NHL", season = "2022-20
   }
 
   full_goalie_table <- goalie_table %>%
-    dplyr::select(rank, tidyselect::all_of(char_vec), tidyselect::everything()) %>%
+    dplyr::select(tidyselect::all_of(char_vec), tidyselect::everything()) %>%
+    dplyr::select(-rank) %>%
     dplyr::mutate(dplyr::across(tidyselect::all_of(char_vec), as.character),
                   dplyr::across(games_played:tidyselect::last_col(), as.numeric))
 
