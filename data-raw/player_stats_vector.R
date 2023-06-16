@@ -19,4 +19,7 @@ player_stats_vector <- list(
 )
 player_stats_vector <- unlist(player_stats_vector)
 
+player_stats_vector_character <- c("season", "record")
+
 usethis::use_data(player_stats_vector, internal = T, overwrite = T)
+usethis::use_data(player_stats_vector_character, internal = T, overwrite = T)
