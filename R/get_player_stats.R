@@ -45,7 +45,9 @@ get_player_stats <- function(website) {
       dplyr::mutate(captaincy = gsub("[^a-zA-Z]", "", captaincy))
   }
   final_df <- final_df %>%
-    dplyr::mutate(dplyr::across(tidyselect::all_of(numeric_cols), as.numeric),
+    dplyr::mutate(dplyr::across(tidyselect::all_of(numeric_cols), ~ gsub("( )|(\\*)", "", .x)),
+                  dplyr::across(tidyselect::all_of(numeric_cols), as.numeric),
+                  dplyr::across(dplyr::where(is.character), ~ gsub("\\s{10,}", " ", .x)),
                   dplyr::across(dplyr::where(is.character), trimws))
 
   return(final_df)
