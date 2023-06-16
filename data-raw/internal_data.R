@@ -31,7 +31,8 @@ player_stats_vector <- list(
   saves = "SV",
   shutouts = "SO",
   record = "WLT",
-  time_on_ice = "TOI"
+  time_on_ice = "TOI",
+  years_played = "Years"
 )
 player_stats_vector <- unlist(player_stats_vector)
 
