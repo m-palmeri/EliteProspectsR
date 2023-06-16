@@ -25,49 +25,25 @@ get_player_stats <- function(website) {
 
 
 .player_stats_cleaner <- function(df) {
-  #skaters
-  if ("TP" %in% names(df)) {
-    return(.skater_stats_cleaner(df))
-  }
 
-  #goalies
-  if ("SV%" %in% names(df)) {
-    return(.goalie_stats_cleaner(df))
-  }
-}
+  rename_cols <- player_stats_vector[player_stats_vector %in% names(df)] %>%
+    .[order(match(., names(df)))]
+  numeric_cols <- rename_cols %>%
+    names() %>%
+    .[!(. %in% player_stats_vector_character)]
+  rename_function_call <- rename_cols %>%
+    paste0(names(.), " = `", ., "`") %>%
+    paste(., collapse = ", ") %>%
+    paste0("dplyr::rename(df, ", ., ")")
 
-
-.skater_stats_cleaner <- function(df) {
-  df %>%
-    dplyr::rename(season = S,
-                  games_played = GP,
-                  goals = G,
-                  assists = A,
-                  points = TP,
-                  penalty_minutes = PIM,
-                  plus_minus = `+/-`) %>%
+  final_df <- eval(parse(text = rename_function_call)) %>%
     dplyr::rename_with(tolower) %>%
     replace(., . == "-", NA) %>%
     tidyr::separate(team, into = c("team", "captaincy"), sep = " {10,}", fill = "right") %>%
-    dplyr::mutate(dplyr::across(games_played:plus_minus, as.numeric),
+    dplyr::mutate(dplyr::across(tidyselect::all_of(numeric_cols), as.numeric),
                   captaincy = gsub("[^a-zA-Z]", "", captaincy),
                   dplyr::across(dplyr::where(is.character), trimws))
+
+  return(final_df)
 }
 
-
-.goalie_stats_cleaner <- function(df) {
-  df %>%
-    dplyr::rename(season = S,
-                  games_played = GP,
-                  goals_against_average = GAA,
-                  save_percentage = `SV%`,
-                  goals_against = GA,
-                  saves = SV,
-                  shutouts = SO,
-                  record = WLT,
-                  time_on_ice = TOI) %>%
-    dplyr::select(-GD) %>%
-    dplyr::rename_with(tolower) %>%
-    replace(., . == "-", NA) %>%
-    dplyr::mutate(dplyr::across(games_played:time_on_ice, as.numeric))
-}
