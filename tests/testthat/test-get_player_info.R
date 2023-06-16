@@ -34,7 +34,7 @@ test_that("Filip Forsberg Tests", {
 
 
 
-test_that("Nicholas West Tests", {
+test_that("John Blum Tests", {
   player_info <- get_player_info("https://www.eliteprospects.com/player/68038/john-blum")
 
   expect_equal(player_info$position, "D")
