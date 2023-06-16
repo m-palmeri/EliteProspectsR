@@ -5,6 +5,15 @@ get_player_awards <- function(website) {
     rvest::html_elements("div[id='awards']") %>%
     rvest::html_elements("li")
 
+  #if no awards
+  if (length(awards_temp_list) == 0) {
+    return(data.frame(
+      season = character(),
+      award = character(),
+      award_link = character()
+    ))
+  }
+
   #subsetting to overaching lists
   overarching_list <- awards_temp_list %>%
     rvest::html_element("div") %>%
@@ -13,7 +22,7 @@ get_player_awards <- function(website) {
 
   awards_df <- purrr::map_df(
     awards_temp_list[which(overarching_list)],
-    .get_player_highlights_helper
+    .get_player_awards_helper
   )
 
   return(awards_df)
@@ -29,7 +38,8 @@ get_player_awards <- function(website) {
     rvest::html_elements("li") %>%
     rvest::html_text() %>%
     gsub("\\(.*\\)", "", .) %>%
-    trimws()
+    trimws() %>%
+    gsub(" +", " ", .)
 
   award_links <- li %>%
     rvest::html_elements("li") %>%
