@@ -38,10 +38,14 @@ get_player_stats <- function(website) {
 
   final_df <- eval(parse(text = rename_function_call)) %>%
     dplyr::rename_with(tolower) %>%
-    replace(., . == "-", NA) %>%
-    tidyr::separate(team, into = c("team", "captaincy"), sep = " {10,}", fill = "right") %>%
+    replace(., . == "-", NA)
+  if ("team" %in% names(final_df)) {
+    final_df <- final_df %>%
+      tidyr::separate(team, into = c("team", "captaincy"), sep = " {10,}", fill = "right") %>%
+      dplyr::mutate(captaincy = gsub("[^a-zA-Z]", "", captaincy))
+  }
+  final_df <- final_df %>%
     dplyr::mutate(dplyr::across(tidyselect::all_of(numeric_cols), as.numeric),
-                  captaincy = gsub("[^a-zA-Z]", "", captaincy),
                   dplyr::across(dplyr::where(is.character), trimws))
 
   return(final_df)
