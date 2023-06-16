@@ -69,7 +69,7 @@ test_that("John Blum Test", {
 
 
 test_that("Pekka Rinne Tests", {
-  current_pull <- suppressWarnings(get_player_stats("https://www.eliteprospects.com/player/4282/pekka-rinne"))
+  current_pull <- get_player_stats("https://www.eliteprospects.com/player/4282/pekka-rinne")
 
   comparative <- load_test_rds("pekka_rinne_data.rds")
 
