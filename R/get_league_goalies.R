@@ -1,7 +1,7 @@
 get_league_goalies <- function(website = NULL, league = "NHL", season = "2022-2023") {
 
   function_call <- match.call()
-  website <- .league_parameter_check(website, league, season, function_call)
+  website <- .league_parameter_check(website, league, season, function_call, "/stats/")
 
   # getting number of pages
   page <- rvest::read_html(website)

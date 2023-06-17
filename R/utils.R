@@ -8,7 +8,7 @@
 }
 
 
-.league_parameter_check <- function(website, league, season, function_call) {
+.league_parameter_check <- function(website, league, season, function_call, between) {
   # setting league and season to NULL if only website is specified
   if ("website" %in% names(function_call) &
       all(!(c("league", "season") %in% names(function_call)))) {
@@ -29,7 +29,7 @@
 
   if (!is.null(league) & !is.null(season)) {
     website <- paste0("https://www.eliteprospects.com/league/",
-                      tolower(league), "/stats/", season)
+                      tolower(league), between, season)
   }
 
   return(website)
