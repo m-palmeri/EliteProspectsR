@@ -28,11 +28,15 @@ player_stats_vector <- list(
   goals_against_average = "GAA",
   save_percentage = "SV%",
   goals_against = "GA",
-  saves = "SV",
+  saves = "SVS",
   shutouts = "SO",
   record = "WLT",
   time_on_ice = "TOI",
-  years_played = "Years"
+  years_played = "Years",
+  wins = "W",
+  ties = "T",
+  losses = "L",
+  Saves = "SV"
 )
 player_stats_vector <- unlist(player_stats_vector)
 

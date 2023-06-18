@@ -1,15 +1,13 @@
 Package: EliteProspectsR
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Package for scrapping data from eliteprospects.com
+Version: 0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Matthew",
+           family = "Palmeri",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+           email = "matthew.thomas.palmeri@gmail.com"
+Description: Utility functions for scrapping various data from eliteprospects.com. This includes draft lists, player stats, player information, league information, and team information. Note that there is an IP-related rate limit, so will likely run into 403 errors when running lots of queries back-to-back. 
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

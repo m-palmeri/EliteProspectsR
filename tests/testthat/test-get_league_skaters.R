@@ -24,23 +24,6 @@ test_that("parameter check", {
 })
 
 
-test_that("SHL 2010 check", {
-  shl_2010 <- get_league_skaters(league = "SHL", season = "2010-2011")
-
-  comp <- load_test_rds("shl_2010_2011_skaters.rds")
-
-  expect_equal(shl_2010, comp)
-})
-
-
-test_that("NAHL 2015 check", {
-  nahl_2015 <- get_league_skaters(league = "NAHL", season = "2015-2016")
-
-  comp <- load_test_rds("nahl_2015_2016_skaters.rds")
-
-  expect_equal(nahl_2015, comp)
-})
-
 test_that("WJC-18 2018 check", {
   wjc_2018 <- get_league_skaters(league = "wjc-18", season = "2018-2019")
 

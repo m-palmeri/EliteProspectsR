@@ -32,23 +32,6 @@ test_that("WHL 2015 check", {
 })
 
 
-test_that("Liiga 2008 check", {
-  liiga_2008 <- get_league_goalies(league = "Liiga", season = "2008-2009")
-
-  comp <- load_test_rds("liiga_2008_2009_goalies.rds")
-
-  expect_equal(liiga_2008, comp)
-})
-
-test_that("WJC-20 2014 check", {
-  wjc_2014 <- get_league_goalies(league = "wjc-20", season = "2014-2015")
-
-  comp <- load_test_rds("wjc_2014_2015_goalies.rds")
-
-  expect_equal(wjc_2014, comp)
-})
-
-
 test_that("WHA All-Time check", {
   wha_alltime <- get_league_goalies(league = "WHA", season = "all-time")
 

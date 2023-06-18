@@ -15,7 +15,6 @@ get_draft_players <- function(website = NULL, draft_year = 2020) {
     website <- paste0("https://www.eliteprospects.com/draft/nhl-entry-draft/", draft_year)
   }
 
-
   page <- rvest::read_html(website)
 
   #getting player info part of table

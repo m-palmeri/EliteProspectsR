@@ -37,17 +37,10 @@ get_player_stats <- function(website) {
 
 .player_stats_cleaner <- function(df) {
 
-  rename_cols <- player_stats_vector[player_stats_vector %in% names(df)] %>%
-    .[order(match(., names(df)))]
-  numeric_cols <- rename_cols %>%
-    names() %>%
-    .[!(. %in% player_stats_vector_character)]
-  rename_function_call <- rename_cols %>%
-    paste0(names(.), " = `", ., "`") %>%
-    paste(., collapse = ", ") %>%
-    paste0("dplyr::rename(df, ", ., ")")
+  rename_temp <- .rename_df_helper(df)
+  numeric_cols <- rename_temp[[2]]
 
-  final_df <- eval(parse(text = rename_function_call)) %>%
+  final_df <- rename_temp[[1]] %>%
     dplyr::rename_with(tolower) %>%
     replace(., . == "-", NA)
   if ("team" %in% names(final_df)) {

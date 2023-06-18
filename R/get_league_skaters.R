@@ -37,18 +37,18 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
     rvest::html_elements("div[id='skater-stats']") %>%
     rvest::html_elements("table")
 
-  skater_table <- table_setup %>%
+  temp_table <- table_setup %>%
     rvest::html_table() %>%
-    magrittr::extract2(1) %>%
-    dplyr::rename(rank = `#`,
-                  games_played = GP,
-                  goals = G,
-                  assists = A,
-                  points = TP,
-                  penalty_minutes = PIM) %>%
+    magrittr::extract2(1)
+
+  rename_temp <- .rename_df_helper(temp_table)
+  numeric_cols <- rename_temp[[2]]
+
+  skater_table <- rename_temp[[1]] %>%
+    dplyr::rename(rank = `#`) %>%
     dplyr::rename_with(tolower) %>%
+    dplyr::mutate(player = gsub("\\(.*\\)", "", player)) %>%
     dplyr::filter(games_played != "")
-  names(skater_table) <- gsub("\\+/-", "plus_minus", names(skater_table))
 
   player_links <- .get_table_links(table_setup, "player")
   skater_table <- dplyr::mutate(skater_table, player_link = player_links)
@@ -63,6 +63,7 @@ get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-20
   full_skater_table <- skater_table %>%
     dplyr::select(rank, tidyselect::all_of(char_vec), tidyselect::everything()) %>%
     dplyr::mutate(dplyr::across(tidyselect::all_of(char_vec), as.character),
+                  dplyr::across(tidyselect::all_of(char_vec), trimws),
                   dplyr::across(games_played:tidyselect::last_col(), as.numeric))
 
   return(full_skater_table)

@@ -36,20 +36,15 @@ get_league_goalies <- function(website = NULL, league = "NHL", season = "2022-20
     rvest::html_elements("div[id='goalie-stats']") %>%
     rvest::html_elements("table")
 
-  goalie_table <- table_setup %>%
+  temp_table <- table_setup %>%
     rvest::html_table() %>%
-    magrittr::extract2(1) %>%
-    dplyr::rename(rank = `#`,
-                  games_played = GP,
-                  goals_against_average = GAA,
-                  save_percentage = `SV%`,
-                  wins = W,
-                  loses = L,
-                  ties = `T`,
-                  shutouts = SO,
-                  time_on_ice = TOI,
-                  saves = SVS,
-                  goals_against = GA) %>%
+    magrittr::extract2(1)
+
+  rename_temp <- .rename_df_helper(temp_table)
+  numeric_cols <- rename_temp[[2]]
+
+  goalie_table <- rename_temp[[1]] %>%
+    dplyr::select(-`#`) %>%
     dplyr::rename_with(tolower) %>%
     dplyr::filter(games_played != "")
 
@@ -65,7 +60,6 @@ get_league_goalies <- function(website = NULL, league = "NHL", season = "2022-20
 
   full_goalie_table <- goalie_table %>%
     dplyr::select(tidyselect::all_of(char_vec), tidyselect::everything()) %>%
-    dplyr::select(-rank) %>%
     dplyr::mutate(dplyr::across(tidyselect::all_of(char_vec), as.character),
                   dplyr::across(games_played:tidyselect::last_col(), as.numeric))
 
