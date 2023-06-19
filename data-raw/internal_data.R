@@ -36,7 +36,11 @@ player_stats_vector <- list(
   wins = "W",
   ties = "T",
   losses = "L",
-  Saves = "SV"
+  Saves = "SV",
+  overtime_wins = "OTW",
+  overtime_losses = "OTL",
+  goals_for = "GF",
+  Points_per_game = "P/GP"
 )
 player_stats_vector <- unlist(player_stats_vector)
 

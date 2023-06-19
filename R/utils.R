@@ -53,3 +53,7 @@
 
   return(list(changed_df, numeric_cols))
 }
+
+.is_coerce_numeric  <- function(x) {
+  suppressWarnings(is.na(as.numeric(x)))
+}
