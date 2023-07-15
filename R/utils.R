@@ -1,9 +1,12 @@
-.get_table_links <- function(table_setup, finder) {
-  table_setup %>%
+.get_table_links <- function(table_setup, finder, skip_td_filter = F) {
+  temp <- table_setup %>%
     rvest::html_elements("tbody") %>%
     rvest::html_elements("tr") %>%
-    Filter(function(x) !grepl("(space)|(title)", rvest::html_attr(x, "class")), .) %>%
-    rvest::html_element(glue::glue("td[class*='{finder}']")) %>%
+    Filter(function(x) !grepl("(space)|(title)", rvest::html_attr(x, "class")), .)
+  if (!skip_td_filter) {
+    temp <- rvest::html_element(temp, glue::glue("td[class*='{finder}']"))
+  }
+  temp %>%
     rvest::html_element(glue::glue("a[href*='{finder}']")) %>%
     rvest::html_attr("href")
 }
