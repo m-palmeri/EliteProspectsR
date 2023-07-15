@@ -60,3 +60,9 @@
 .is_coerce_numeric  <- function(x) {
   suppressWarnings(is.na(as.numeric(x)))
 }
+
+.numeric_identifier <- function(x) {
+  suppressWarnings(as.numeric(x)) %>%
+    is.na() %>%
+    isFALSE()
+}

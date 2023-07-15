@@ -55,9 +55,3 @@ get_player_info <- function(website) {
 
   return(data.frame(id = player_id, name = player_name))
 }
-
-.numeric_identifier <- function(x) {
-  suppressWarnings(as.numeric(x)) %>%
-    is.na() %>%
-    isFALSE()
-}
