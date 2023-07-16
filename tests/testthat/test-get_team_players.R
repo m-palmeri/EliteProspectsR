@@ -14,6 +14,8 @@ test_that("Omaha Lancers 2009-2010", {
   expect_setequal(unique(players$position), c("G", "D", "F"))
 
   expect_false(any(is.na(players$position)))
+
+  expect_true(all(players$season == "2009-2010"))
 })
 
 
