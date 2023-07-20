@@ -24,8 +24,8 @@ get_league_teams <- function(website = NULL, league = "NHL", season = "2022-2023
     dplyr::mutate(team_link = team_links) %>%
     replace(., . == "-", NA_character_) %>%
     dplyr::select(team, team_link, tidyselect::everything()) %>%
-    dplyr::mutate(across(tidyselect::all_of(numeric_cols), as.numeric),
-                  across(dplyr::where(is.character), trimws)) %>%
+    dplyr::mutate(dplyr::across(tidyselect::all_of(numeric_cols), as.numeric),
+                  dplyr::across(dplyr::where(is.character), trimws)) %>%
     dplyr::rename(goal_differential = plus_minus) %>%
     dplyr::arrange(-points_per_game, -goal_differential)
 
