@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^EliteProspectsR\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
