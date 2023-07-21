@@ -5,7 +5,7 @@ get_player_info <- function(website) {
   messy_info_table <- page %>%
     rvest::html_elements("div[class='ep-list']") %>%
     rvest::html_elements("div[class^='order']") %>%
-    purrr::map_df(., .f = .player_info_cleaner) %>%
+    purrr::map_df(., .f = .person_info_cleaner) %>%
     dplyr::left_join(data.frame(attribute = player_info_vector), ., by = "attribute")
   # player_info_vector is internal vector with player info attributes
 
@@ -13,8 +13,9 @@ get_player_info <- function(website) {
     dplyr::mutate(attribute = tolower(gsub(" ", "_", attribute))) %>%
     dplyr::filter(attribute != "highlights") %>%
     tidyr::pivot_wider(names_from = "attribute", values_from = "value") %>%
-    cbind(.player_name(website, page), .) %>%
-    dplyr::mutate(height = height %>%
+    dplyr::mutate(player_id = .get_website_id(website),
+                  player_name = .get_person_name(page),
+                  height = height %>%
                     stringr::str_extract(., "[0-9]+ cm") %>%
                     gsub(" cm", "", .),
                   weight = weight %>%
@@ -28,30 +29,8 @@ get_player_info <- function(website) {
                     into = paste("draft", c("year", "round", "pick", "team"), sep = "_")) %>%
     dplyr::mutate(dplyr::across(c(age, height, weight, cap_hit, draft_year, draft_round, draft_pick),
                                 as.numeric)) %>%
-    replace(., . == "-", NA)
+    replace(., . == "-", NA) %>%
+    dplyr::select(player_id, player_name, tidyselect::everything())
 
   return(clean_info_table)
-}
-
-.player_info_cleaner <- function(html_node) {
-  html_node %>%
-    rvest::html_children() %>%
-    rvest::html_text() %>%
-    trimws() %>%
-    magrittr::set_names(c("attribute", "value")) %>%
-    t() %>%
-    data.frame()
-}
-
-
-.player_name <- function(website, page) {
-  player_id <- stringr::str_split(website, "/")[[1]] %>%
-    Filter(.numeric_identifier, .) %>%
-    as.numeric()
-  player_name <- page %>%
-    rvest::html_elements("h1[class$='name']") %>%
-    rvest::html_text() %>%
-    trimws()
-
-  return(data.frame(id = player_id, name = player_name))
 }

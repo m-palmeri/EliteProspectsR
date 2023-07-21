@@ -57,6 +57,36 @@
   return(list(changed_df, numeric_cols))
 }
 
+
+.person_info_cleaner <- function(html_node) {
+  html_node %>%
+    rvest::html_children() %>%
+    rvest::html_text() %>%
+    trimws() %>%
+    magrittr::set_names(c("attribute", "value")) %>%
+    t() %>%
+    data.frame()
+}
+
+
+.get_website_id <- function(website) {
+  id <- stringr::str_split(website, "/")[[1]] %>%
+    Filter(.numeric_identifier, .) %>%
+    as.numeric()
+  return(id)
+}
+
+
+.get_person_name <- function(page) {
+  name <- page %>%
+    rvest::html_elements("h1[class$='name']") %>%
+    rvest::html_text() %>%
+    trimws()
+
+  return(name)
+}
+
+
 .is_coerce_numeric  <- function(x) {
   suppressWarnings(is.na(as.numeric(x)))
 }
