@@ -79,7 +79,6 @@
     unique()
   if (length(other_link) == 0) other_link <- NA
   other_id <- .get_website_id(other_link)
-  if (length(other_id) == 0) other_id <- NA
 
   return_df <- data.frame(id = other_id, link = other_link)
   colnames(return_df) <- paste0(search, "_", c("id", "link"))
@@ -90,9 +89,11 @@
 
 # small helper to grab id from given website (team, player, staff)
 .get_website_id <- function(website) {
-  stringr::str_split(website, "/")[[1]] %>%
+  id <- stringr::str_split(website, "/")[[1]] %>%
     Filter(.numeric_identifier, .) %>%
     as.numeric()
+  if (length(id) == 0) id <- NA
+  return(id)
 }
 
 # small helper to get name from webpage (player/staff)
