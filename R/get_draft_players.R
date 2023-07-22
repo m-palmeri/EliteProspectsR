@@ -39,11 +39,16 @@ get_draft_players <- function(website = NULL, draft_year = 2020) {
   player_links <- .get_table_links(table_setup, "player")
   team_links <- .get_table_links(table_setup, "team")
 
+  #getting ids for players
+  player_ids <- sapply(player_links, USE.NAMES = F, FUN = .get_website_id)
+  team_ids <- sapply(team_links, USE.NAMES = F, FUN = .get_website_id)
 
   full_player_table <- player_table %>%
-    dplyr::mutate(player_link = player_links) %>%
-    dplyr::mutate(team_link = team_links) %>%
-    dplyr::select(overall_pick, player, player_link, team, team_link)
+    dplyr::mutate(player_id = player_ids,
+                  player_link = player_links,
+                  team_id = team_ids,
+                  team_link = team_links) %>%
+    dplyr::select(overall_pick, player_id, player, player_link, team_id, team, team_link)
 
   return(full_player_table)
 }
