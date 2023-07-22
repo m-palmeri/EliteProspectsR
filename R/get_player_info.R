@@ -10,7 +10,9 @@ get_player_info <- function(website) {
   # player_info_vector is internal vector with player info attributes
 
   clean_info_table <- messy_info_table %>%
-    dplyr::mutate(attribute = tolower(gsub(" ", "_", attribute))) %>%
+    dplyr::mutate(attribute = tolower(gsub(" ", "_", attribute)),
+                  value = gsub("\\s+", " ", value),
+                  value = trimws(value)) %>%
     dplyr::filter(attribute != "highlights") %>%
     tidyr::pivot_wider(names_from = "attribute", values_from = "value") %>%
     dplyr::mutate(player_id = .get_website_id(website),
