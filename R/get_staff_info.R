@@ -21,19 +21,3 @@ get_staff_info <- function(website) {
 
   return(staff_info)
 }
-
-
-.get_other_link <- function(page, search) {
-  other_link <- page %>%
-    rvest::html_elements("div[class='ep-card']") %>%
-    rvest::html_elements("p[class='ep-text']") %>%
-    rvest::html_elements(glue::glue("a[href*='{search}']")) %>%
-    magrittr::extract2(1) %>%
-    rvest::html_attr("href")
-  other_id <- .get_website_id(other_link)
-
-  return_df <- data.frame(id = other_id, link = other_link)
-  colnames(return_df) <- paste0(search, "_", c("id", "link"))
-
-  return(return_df)
-}

@@ -1,3 +1,4 @@
+# get links from each row in a table using some identifier (team, player, etc.)
 .get_table_links <- function(table_setup, finder, skip_td_filter = F) {
   temp <- table_setup %>%
     rvest::html_elements("tbody") %>%
@@ -11,7 +12,7 @@
     rvest::html_attr("href")
 }
 
-
+# quick check for parameters given to certain get_league... functions
 .league_parameter_check <- function(website, league, season, function_call, between) {
   # setting league and season to NULL if only website is specified
   if ("website" %in% names(function_call) &
@@ -39,7 +40,7 @@
   return(website)
 }
 
-
+# useful for renaming a bunch of columns. Used in get_player_stats and get_player_careertotals
 .rename_df_helper <- function(df) {
   rename_cols <- player_stats_vector[player_stats_vector %in% names(df)] %>%
     .[order(match(., names(df)))]
@@ -57,7 +58,7 @@
   return(list(changed_df, numeric_cols))
 }
 
-
+# helper function to get clean data from the information blocks (date of birth, position, etc.)
 .person_info_cleaner <- function(html_node) {
   html_node %>%
     rvest::html_children() %>%
@@ -68,29 +69,46 @@
     data.frame()
 }
 
+# function to get player link/id from staff website, or staff link/id from player website
+.get_other_link <- function(page, search) {
+  other_link <- page %>%
+    rvest::html_elements("div[class='ep-card']") %>%
+    rvest::html_elements("p[class='ep-text']") %>%
+    rvest::html_elements(glue::glue("a[href*='{search}']")) %>%
+    rvest::html_attr("href") %>%
+    unique()
+  if (length(other_link) == 0) other_link <- NA
+  other_id <- .get_website_id(other_link)
+  if (length(other_id) == 0) other_id <- NA
 
-.get_website_id <- function(website) {
-  id <- stringr::str_split(website, "/")[[1]] %>%
-    Filter(.numeric_identifier, .) %>%
-    as.numeric()
-  return(id)
+  return_df <- data.frame(id = other_id, link = other_link)
+  colnames(return_df) <- paste0(search, "_", c("id", "link"))
+
+  return(return_df)
 }
 
 
+# small helper to grab id from given website (team, player, staff)
+.get_website_id <- function(website) {
+  stringr::str_split(website, "/")[[1]] %>%
+    Filter(.numeric_identifier, .) %>%
+    as.numeric()
+}
+
+# small helper to get name from webpage (player/staff)
 .get_person_name <- function(page) {
-  name <- page %>%
+  page %>%
     rvest::html_elements("h1[class$='name']") %>%
     rvest::html_text() %>%
     trimws()
-
-  return(name)
 }
 
-
+# small helper to determine if you can safely coerce a column to numeric
 .is_coerce_numeric  <- function(x) {
   suppressWarnings(is.na(as.numeric(x)))
 }
 
+# used in Filter calls to keep just numeric
 .numeric_identifier <- function(x) {
   suppressWarnings(as.numeric(x)) %>%
     is.na() %>%
