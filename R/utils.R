@@ -142,10 +142,6 @@
     purrr::map(., function(x) ifelse(length(x) == 0, NA, x)) %>%
     unlist() %>%
     as.numeric()
-  # id <- stringr::str_split(website, "/")[[1]] %>%
-  #   Filter(.numeric_identifier, .) %>%
-  #   as.numeric()
-  # if (length(id) == 0) id <- NA
   return(ids)
 }
 
