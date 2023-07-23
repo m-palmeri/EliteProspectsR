@@ -49,19 +49,28 @@ get_league_goalies <- function(website = NULL, league = "NHL", season = "2022-20
     dplyr::filter(games_played != "")
 
   player_links <- .get_table_links(table_setup, "player")
-  goalie_table <- dplyr::mutate(goalie_table, player_link = player_links)
-  char_vec <- c("player", "player_link")
+  player_ids <- sapply(player_links, USE.NAMES = F, FUN = .get_website_id)
+  goalie_table <- goalie_table %>%
+    dplyr::mutate(player_id = player_ids,
+                  player_link = player_links)
+  char_vec <- c("player_id", "player", "player_link")
 
   if ("team" %in% names(goalie_table)) {
     team_links <- .get_table_links(table_setup, "team")
-    goalie_table <- dplyr::mutate(goalie_table, team_link = team_links)
-    char_vec <- c(char_vec, "team", "team_link")
+    team_ids <- sapply(team_links, USE.NAMES = F, FUN = .get_website_id)
+    goalie_table <- goalie_table %>%
+      dplyr::mutate(team_id = team_ids,
+                    team_link = team_links)
+    char_vec <- c(char_vec, "team_id", "team", "team_link")
   }
 
   full_goalie_table <- goalie_table %>%
     dplyr::select(tidyselect::all_of(char_vec), tidyselect::everything()) %>%
     dplyr::mutate(dplyr::across(tidyselect::all_of(char_vec), as.character),
-                  dplyr::across(games_played:tidyselect::last_col(), as.numeric))
+                  dplyr::across(games_played:tidyselect::last_col(), as.numeric),
+                  dplyr::across(tidyselect::ends_with("_id"), as.numeric)) %>%
+    replace(., . == "", NA) %>%
+    tidyr::fill(player_id, player, player_link)
 
   return(full_goalie_table)
 }
