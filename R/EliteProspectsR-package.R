@@ -3,6 +3,6 @@
 
 ## usethis namespace: start
 #' @importFrom magrittr %>%
-#' @importFrom purrr %||%
+#' @importFrom rlang %||%
 ## usethis namespace: end
 NULL

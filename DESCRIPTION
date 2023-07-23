@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Matthew",
            family = "Palmeri",
            role = c("aut", "cre"),
-           email = "matthew.thomas.palmeri@gmail.com"
+           email = "matthew.thomas.palmeri@gmail.com")
 Description: Utility functions for scrapping various data from eliteprospects.com. This includes draft lists, player stats, player information, league information, and team information. Note that there is an IP-related rate limit, so will likely run into 403 errors when running lots of queries back-to-back. 
 License: MIT + file LICENSE
 Encoding: UTF-8

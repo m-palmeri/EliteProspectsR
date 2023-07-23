@@ -4,12 +4,12 @@
 \name{EliteProspectsR-package}
 \alias{EliteProspectsR}
 \alias{EliteProspectsR-package}
-\title{EliteProspectsR: What the Package Does (One Line, Title Case)}
+\title{EliteProspectsR: Package for scrapping data from eliteprospects.com}
 \description{
-What the package does (one paragraph).
+Utility functions for scrapping various data from eliteprospects.com. This includes draft lists, player stats, player information, league information, and team information. Note that there is an IP-related rate limit, so will likely run into 403 errors when running lots of queries back-to-back.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Matthew Palmeri \email{matthew.thomas.palmeri@gmail.com}
 
 }
 \keyword{internal}
