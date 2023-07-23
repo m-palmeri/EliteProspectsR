@@ -16,14 +16,16 @@ get_league_teams <- function(website = NULL, league = "NHL", season = "2022-2023
   numeric_cols <- rename_temp[[2]]
 
   team_links <- .get_table_links(table_setup, "team")
+  team_ids <- sapply(team_links, USE.NAMES = F, FUN = .get_website_id)
 
   league_standings <- rename_temp[[1]] %>%
     dplyr::select(-`#`) %>%
     dplyr::rename_with(tolower) %>%
     dplyr::filter(!.is_coerce_numeric(games_played)) %>%
-    dplyr::mutate(team_link = team_links) %>%
+    dplyr::mutate(team_link = team_links,
+                  team_id = team_ids) %>%
     replace(., . == "-", NA_character_) %>%
-    dplyr::select(team, team_link, tidyselect::everything()) %>%
+    dplyr::select(team_id, team, team_link, tidyselect::everything()) %>%
     dplyr::mutate(dplyr::across(tidyselect::all_of(numeric_cols), as.numeric),
                   dplyr::across(dplyr::where(is.character), trimws)) %>%
     dplyr::rename(goal_differential = plus_minus) %>%
