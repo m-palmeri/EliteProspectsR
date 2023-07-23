@@ -12,7 +12,8 @@ test_that("deeper test of output", {
   column_types <- sapply(stats, class) %>%
     unname()
   expect_equal(column_types,
-               c("numeric", rep("character", 7), rep("numeric", 6)))
+               c("numeric", rep("character", 3), "numeric",
+                 rep("character", 4), rep("numeric", 6)))
 
 })
 
