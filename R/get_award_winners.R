@@ -6,6 +6,7 @@ get_award_winners <- function(website) {
     rvest::html_elements("table")
 
   player_links <- .get_table_links(table_setup, "player")
+  player_ids <- .get_website_id(player_links)
 
   award_table <- table_setup %>%
     rvest::html_table() %>%
@@ -13,7 +14,8 @@ get_award_winners <- function(website) {
     `colnames<-`(ifelse(names(.) == "", "test", names(.))) %>%
     dplyr::rename(season = Season,
                   player = `Award winner`) %>%
-    dplyr::select(season, player) %>%
+    dplyr::mutate(player_id = player_ids) %>%
+    dplyr::select(season, player_id, player) %>%
     dplyr::mutate(player = gsub("\\(.*\\)$", "", player),
                   player = trimws(player),
                   player_link = player_links,
