@@ -1,3 +1,51 @@
+.get_league_players_helper <- function(website, player_type) {
+  page <- rvest::read_html(website)
+
+  table_setup <- page %>%
+    rvest::html_elements(glue::glue("div[id='{player_type}-stats']")) %>%
+    rvest::html_elements("table")
+
+  temp_table <- table_setup %>%
+    rvest::html_table() %>%
+    magrittr::extract2(1)
+
+  rename_temp <- .rename_df_helper(temp_table)
+  numeric_cols <- rename_temp[[2]]
+
+  player_table <- rename_temp[[1]] %>%
+    dplyr::select(-`#`) %>%
+    dplyr::rename_with(tolower) %>%
+    dplyr::mutate(player = gsub("\\(.*\\)", "", player)) %>%
+    dplyr::filter(games_played != "")
+
+  player_links <- .get_table_links(table_setup, "player")
+  player_ids <- sapply(player_links, USE.NAMES = F, FUN = .get_website_id)
+  player_table <- player_table %>%
+    dplyr::mutate(player_id = player_ids,
+                  player_link = player_links)
+  char_vec <- c("player_id", "player", "player_link")
+
+  if ("team" %in% names(player_table)) {
+    team_links <- .get_table_links(table_setup, "team")
+    team_ids <- sapply(team_links, USE.NAMES = F, FUN = .get_website_id)
+    player_table <- player_table %>%
+      dplyr::mutate(team_id = team_ids,
+                    team_link = team_links)
+    char_vec <- c(char_vec, "team_id", "team", "team_link")
+  }
+
+  full_player_table <- player_table %>%
+    dplyr::select(tidyselect::all_of(char_vec), tidyselect::everything()) %>%
+    dplyr::mutate(dplyr::across(tidyselect::all_of(char_vec), as.character),
+                  dplyr::across(games_played:tidyselect::last_col(), as.numeric),
+                  dplyr::across(tidyselect::ends_with("_id"), as.numeric)) %>%
+    replace(., . == "", NA) %>%
+    tidyr::fill(player_id, player, player_link)
+
+  return(full_player_table)
+}
+
+
 # get links from each row in a table using some identifier (team, player, etc.)
 .get_table_links <- function(table_setup, finder, skip_td_filter = F) {
   temp <- table_setup %>%
