@@ -16,7 +16,7 @@ get_league_teams <- function(website = NULL, league = "NHL", season = "2022-2023
   numeric_cols <- rename_temp[[2]]
 
   team_links <- .get_table_links(table_setup, "team")
-  team_ids <- sapply(team_links, USE.NAMES = F, FUN = .get_website_id)
+  team_ids <- .get_website_id(team_links)
 
   league_standings <- rename_temp[[1]] %>%
     dplyr::select(-`#`) %>%

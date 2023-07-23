@@ -35,13 +35,13 @@ get_draft_players <- function(website = NULL, draft_year = 2020) {
                   player = gsub("\\(.*\\)", "", player),
                   player = trimws(player))
 
-  #getting links for players
+  #getting links
   player_links <- .get_table_links(table_setup, "player")
   team_links <- .get_table_links(table_setup, "team")
 
-  #getting ids for players
-  player_ids <- sapply(player_links, USE.NAMES = F, FUN = .get_website_id)
-  team_ids <- sapply(team_links, USE.NAMES = F, FUN = .get_website_id)
+  #getting ids
+  player_ids <- .get_website_id(player_links)
+  team_ids <- .get_website_id(team_links)
 
   full_player_table <- player_table %>%
     dplyr::mutate(player_id = player_ids,

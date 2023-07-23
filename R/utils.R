@@ -19,7 +19,7 @@
     dplyr::filter(games_played != "")
 
   player_links <- .get_table_links(table_setup, "player")
-  player_ids <- sapply(player_links, USE.NAMES = F, FUN = .get_website_id)
+  player_ids <- .get_website_id(player_links)
   player_table <- player_table %>%
     dplyr::mutate(player_id = player_ids,
                   player_link = player_links)
@@ -27,7 +27,7 @@
 
   if ("team" %in% names(player_table)) {
     team_links <- .get_table_links(table_setup, "team")
-    team_ids <- sapply(team_links, USE.NAMES = F, FUN = .get_website_id)
+    team_ids <- .get_website_id(team_links)
     player_table <- player_table %>%
       dplyr::mutate(team_id = team_ids,
                     team_link = team_links)
@@ -136,12 +136,17 @@
 
 
 # small helper to grab id from given website (team, player, staff)
-.get_website_id <- function(website) {
-  id <- stringr::str_split(website, "/")[[1]] %>%
-    Filter(.numeric_identifier, .) %>%
+.get_website_id <- function(websites) {
+  ids <- stringr::str_split(websites, "/") %>%
+    purrr::map(., function(x) Filter(.numeric_identifier, x)) %>%
+    purrr::map(., function(x) ifelse(length(x) == 0, NA, x)) %>%
+    unlist() %>%
     as.numeric()
-  if (length(id) == 0) id <- NA
-  return(id)
+  # id <- stringr::str_split(website, "/")[[1]] %>%
+  #   Filter(.numeric_identifier, .) %>%
+  #   as.numeric()
+  # if (length(id) == 0) id <- NA
+  return(ids)
 }
 
 # small helper to get name from webpage (player/staff)
