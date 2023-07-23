@@ -1,6 +1,9 @@
 get_player_awards <- function(website) {
   page <- rvest::read_html(website)
 
+  player_id <- .get_website_id(website)
+  player <- .get_person_name(page)
+
   awards_temp_list <- page %>%
     rvest::html_elements("div[id='awards']") %>%
     rvest::html_elements("li")
@@ -23,7 +26,9 @@ get_player_awards <- function(website) {
   awards_df <- purrr::map_df(
     awards_temp_list[which(overarching_list)],
     .get_player_awards_helper
-  )
+  ) %>%
+    cbind(player, .) %>%
+    cbind(player_id, .)
 
   return(awards_df)
 }
