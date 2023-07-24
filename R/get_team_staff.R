@@ -1,12 +1,19 @@
 get_team_staff <- function(website) {
   page <- rvest::read_html(website)
 
+  team_id <- .get_website_id(website)
+
   staff_table <- page %>%
     rvest::html_elements("ul[id='staff-list']") %>%
     rvest::html_elements("li") %>%
     purrr::map_df(., .team_staff_cleaner) %>%
     replace(., . == "", NA) %>%
-    tidyr::fill(role)
+    tidyr::fill(role) %>%
+    dplyr::mutate(team_id = team_id,
+                  staff_id = .get_website_id(staff_link)) %>%
+    dplyr::select(team_id, role, staff_id, staff_name, staff_link)
+
+  return(staff_table)
 }
 
 
