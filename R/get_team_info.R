@@ -1,9 +1,7 @@
 get_team_info <- function(website) {
   page <- rvest::read_html(website)
 
-  team_id <- stringr::str_split(website, "/")[[1]] %>%
-    Filter(.numeric_identifier, .) %>%
-    as.numeric()
+  team_id <- .get_website_id(website)
 
   info_part <- page %>%
     rvest::html_elements("div[id^='name']") %>%

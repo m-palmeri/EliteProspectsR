@@ -21,5 +21,5 @@ test_that("Niagara Icedogs Picks", {
 
   expect_true("Logan Brown" %in% draft_picks$player)
   expect_true("Josh Norris" %in% draft_picks$player)
-  expect_true("DOugie Hamilton" %in% draft_picks$player)
+  expect_true("Dougie Hamilton" %in% draft_picks$player)
 })

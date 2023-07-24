@@ -2,12 +2,15 @@ get_team_picks <- function(website) {
 
   page <- rvest::read_html(website)
 
+  team_id <- .get_website_id(website)
+
   draft_link <- page %>%
     rvest::html_elements("a[href*='draft']") %>%
     rvest::html_attr("href") %>%
     Filter(function(x) grepl("team", x), .)
 
-  draft_picks <- .get_team_picks_helper(draft_link)
+  draft_picks <- .get_team_picks_helper(draft_link) %>%
+    cbind(team_id, .)
 
   return(draft_picks)
 }
