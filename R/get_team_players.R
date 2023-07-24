@@ -1,11 +1,14 @@
 get_team_players <- function(website) {
   page <- rvest::read_html(website)
 
+  team_id <- .get_website_id(website)
+
   table_setup <- page %>%
     rvest::html_elements("div[id='roster']") %>%
     rvest::html_elements("table")
 
   player_links <- .get_table_links(table_setup, "player", skip_td_filter = T)
+  player_ids <- .get_website_id(player_links)
 
   season <- page %>%
     rvest::html_elements("div[id='roster']") %>%
@@ -25,15 +28,17 @@ get_team_players <- function(website) {
     dplyr::filter(is.na(for_filter)) %>%
     dplyr::rename(number = `#`,
                   position = N,
-                  player = Player) %>%
+                  player_name = Player) %>%
     dplyr::mutate(season = season,
                   number = gsub("\\#", "", number),
                   number = as.numeric(number),
-                  player = gsub("\\(.*\\).*$", "", player),
-                  player = trimws(player),
+                  player_name = gsub("\\(.*\\).*$", "", player_name),
+                  player_name = trimws(player_name),
                   position = stringr::str_sub(position, 1, 1),
-                  player_link = player_links) %>%
-    dplyr::select(season, number, position, player, player_link)
+                  player_link = player_links,
+                  player_id = player_ids,
+                  team_id = team_id) %>%
+    dplyr::select(team_id, season, number, position, player_id, player_name, player_link)
 
   return(player_table)
 }
