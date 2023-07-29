@@ -121,7 +121,7 @@
 .get_other_link <- function(page, search) {
   other_link <- page %>%
     rvest::html_elements("div[class='ep-card']") %>%
-    rvest::html_elements("p[class='ep-text']") %>%
+    rvest::html_elements("[class='ep-text']") %>%
     rvest::html_elements(glue::glue("a[href*='{search}']")) %>%
     rvest::html_attr("href") %>%
     unique()

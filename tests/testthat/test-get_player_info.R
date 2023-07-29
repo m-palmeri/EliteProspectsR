@@ -42,6 +42,8 @@ test_that("John Blum Tests", {
   expect_na(player_info$draft_year)
   expect_na(player_info$agency)
   expect_equal(player_info$status, "Retired")
+  expect_equal(player_info$staff_id, 2321)
+  expect_match(player_info$staff_link, "john-blum")
 })
 
 test_that("Pekka Rinne Tests", {
@@ -50,6 +52,7 @@ test_that("Pekka Rinne Tests", {
   expect_equal(player_info$position, "G")
   expect_equal(player_info$youth_team, "Kempeleen Kiekko-Ketut")
   expect_equal(player_info$draft_year, 2004)
+  expect_equal(player_info$staff_id, 5510)
 })
 
 test_that("Tommy Green Tests", {
@@ -59,4 +62,6 @@ test_that("Tommy Green Tests", {
   expect_na(player_info$height)
   expect_na(player_info$place_of_birth)
   expect_na(player_info$draft_round)
+  expect_na(player_info$staff_id)
+  expect_na(player_info$staff_link)
 })
