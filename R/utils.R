@@ -61,8 +61,12 @@
 }
 
 # quick check for parameters given to certain functions
-.website_parameter_check <- function(website, league, season,
-                                     link_type, function_call, between) {
+.website_parameter_check <- function(website,
+                                     league,
+                                     season,
+                                     link_type,
+                                     function_call,
+                                     between) {
   # setting league and season to NULL if only website is specified
   if ("website" %in% names(function_call) &
       all(!(c("league", "season", "draft_year", "draft_name") %in% names(function_call)))) {
@@ -77,13 +81,28 @@
     params <- "`league` and `season`"
   }
 
+  msg <- NULL
+
   # setting draft_name based on input
   if (link_type == "draft" & !is.null(league)) {
-
+    match_row <- draft_names_crosswalk %>%
+      dplyr::mutate_all(tolower) %>%
+      magrittr::equals(., tolower(league)) %>%
+      rowSums()
+    match_row <- which(match_row > 0)
+    if (length(match_row) == 0) {
+      # no exact match. return an error and point the user towards draft_names_crosswalk
+      msg <- glue::glue("'{league}' not a recognized draft name. ",
+                        "Use `draft_names_crosswalk` to see a list of draft names.")
+    } else {
+      league <- draft_names_crosswalk$link_component[match_row]
+    }
   }
 
   #input checks
-  if (is.null(website) & is.null(league) & is.null(season)) {
+  if (!is.null(msg)) {
+    # intentionally blank in case msg is set earlier
+  } else if (is.null(website) & is.null(league) & is.null(season)) {
     msg <- glue::glue("Please specify either the full `website`, or the {params}")
   } else if (!is.null(website) & (!is.null(league) | !is.null(season))) {
     msg <- glue::glue("Please use either the `website` parameter, or the {params} parameters, not both")

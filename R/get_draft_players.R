@@ -1,26 +1,19 @@
-get_draft_players <- function(website = NULL, draft_year = 2020) {
+get_draft_players <- function(website = NULL,
+                              draft_name = NULL,
+                              draft_year = NULL) {
 
   function_call <- match.call()
-  # setting league and season to NULL if only website is specified
-  if ("website" %in% names(function_call) & !("draft_year" %in% names(function_call))) {
-    draft_year <- NULL
-  }
 
-  ## input checks
-  if (!is.null(website) & !is.null(draft_year)) stop("Please use either the `website` or the `draft_year` parameter, not both")
-  if (is.null(website) & is.null(draft_year)) stop("Please supply either `website` or `draft_year`")
-
-
-  if (!is.null(draft_year)) {
-    website <- paste0("https://www.eliteprospects.com/draft/nhl-entry-draft/", draft_year)
-  }
+  # getting website URL from inputs
+  website <- .website_parameter_check(website, draft_name, draft_year,
+                                      "draft", function_call, "/")
 
   draft_year <- .get_website_id(website)
   website_league <- website %>%
     gsub(".*/draft/", "", .) %>%
     gsub("/.*", "", .)
   draft <- draft_names_crosswalk %>%
-    dplyr::filter(link_suffix == website_league) %>%
+    dplyr::filter(link_component == website_league) %>%
     .$draft_name
 
   page <- rvest::read_html(website)
