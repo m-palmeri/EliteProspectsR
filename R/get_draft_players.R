@@ -15,6 +15,14 @@ get_draft_players <- function(website = NULL, draft_year = 2020) {
     website <- paste0("https://www.eliteprospects.com/draft/nhl-entry-draft/", draft_year)
   }
 
+  draft_year <- .get_website_id(website)
+  website_league <- website %>%
+    gsub(".*/draft/", "", .) %>%
+    gsub("/.*", "", .)
+  draft <- draft_names_crosswalk %>%
+    dplyr::filter(link_suffix == website_league) %>%
+    .$draft_name
+
   page <- rvest::read_html(website)
 
   #getting player info part of table
@@ -44,11 +52,14 @@ get_draft_players <- function(website = NULL, draft_year = 2020) {
   team_ids <- .get_website_id(team_links)
 
   full_player_table <- player_table %>%
-    dplyr::mutate(player_id = player_ids,
+    dplyr::mutate(draft = draft,
+                  draft_year = draft_year,
+                  player_id = player_ids,
                   player_link = player_links,
                   team_id = team_ids,
                   team_link = team_links) %>%
-    dplyr::select(overall_pick, player_id, player, player_link, team_id, team, team_link)
+    dplyr::select(draft, draft_year, overall_pick, player_id, player,
+                  player_link, team_id, team, team_link)
 
   return(full_player_table)
 }

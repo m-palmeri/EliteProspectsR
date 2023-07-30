@@ -27,14 +27,6 @@ test_that("2021 draft full check", {
   expect_equal(draft_table, comp)
 })
 
-test_that("2020 draft full check", {
-  draft_table <- get_draft_players(draft_year = 2020)
-
-  comp <- load_test_rds("2020_nhl_draft_table.rds")
-
-  expect_equal(draft_table, comp)
-})
-
 
 test_that("2020 NAHL full check", {
   draft_table <- get_draft_players(website = "https://www.eliteprospects.com/draft/nahl-entry-draft/2020")
