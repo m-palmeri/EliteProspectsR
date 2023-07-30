@@ -5,12 +5,12 @@ page <- rvest::read_html("https://www.eliteprospects.com/draft/nhl-entry-draft")
 get_draft_links_internal_data <- function(option_node) {
   draft_name <- option_node %>%
     rvest::html_text()
-  link_suffix <- option_node %>%
+  link_component <- option_node %>%
     rvest::html_attr("value") %>%
     stringr::str_split("/") %>%
     magrittr::extract2(1) %>%
     tail(., 1)
-  return(data.frame(draft_name, link_suffix))
+  return(data.frame(draft_name, link_component))
 }
 
 draft_names_crosswalk <- page %>%
