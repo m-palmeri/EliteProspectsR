@@ -60,28 +60,43 @@
     rvest::html_attr("href")
 }
 
-# quick check for parameters given to certain get_league... functions
-.league_parameter_check <- function(website, league, season, function_call, between) {
+# quick check for parameters given to certain functions
+.website_parameter_check <- function(website, league, season,
+                                     link_type, function_call, between) {
   # setting league and season to NULL if only website is specified
   if ("website" %in% names(function_call) &
-      all(!(c("league", "season") %in% names(function_call)))) {
+      all(!(c("league", "season", "draft_year", "draft_name") %in% names(function_call)))) {
     league <- NULL
     season <- NULL
   }
 
+  # setting parameter names based on function call
+  if (link_type == "draft") {
+    params <- "`draft_name` and `draft_year`"
+  } else if (link_type == "league") {
+    params <- "`league` and `season`"
+  }
+
+  # setting draft_name based on input
+  if (link_type == "draft" & !is.null(league)) {
+
+  }
+
   #input checks
   if (is.null(website) & is.null(league) & is.null(season)) {
-    stop("Please specify either the full website, or the league and season")
+    msg <- glue::glue("Please specify either the full `website`, or the {params}")
+  } else if (!is.null(website) & (!is.null(league) | !is.null(season))) {
+    msg <- glue::glue("Please use either the `website` parameter, or the {params} parameters, not both")
+  } else if (is.null(website) & (is.null(league) | is.null(season))) {
+    msg <- glue::glue("Please supply both {params} parameters")
   }
-  if (!is.null(website) & (!is.null(league) | !is.null(season))) {
-    stop("Please use either the `website` parameter, or the `league` and `season` parameters, not both")
-  }
-  if (is.null(website) & (is.null(league) | is.null(season))) {
-    stop("Please supply both `league` and `season` parameters")
+
+  if (!is.null(msg)) {
+    stop(msg)
   }
 
   if (!is.null(league) & !is.null(season)) {
-    website <- paste0("https://www.eliteprospects.com/league/",
+    website <- paste0("https://www.eliteprospects.com/", link_type, "/",
                       tolower(league), between, season)
   }
 
