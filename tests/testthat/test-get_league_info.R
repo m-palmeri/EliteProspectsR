@@ -20,8 +20,8 @@ test_that("general testing", {
   expect_equal(VHL$abbreviation, "VHL")
   expect_equal(VHL$link_component, "vhl")
 
-  WC <- get_league_info("https://www.eliteprospects.com/league/wc")
-  expect_equal(WC$full_name, "World Championship")
-  expect_equal(WC$abbreviation, "WC")
-  expect_equal(WC$link_component, "wc")
+  WJC_20 <- get_league_info("https://www.eliteprospects.com/league/wjc-20")
+  expect_equal(WJC_20$full_name, "U20 World Junior Championship")
+  expect_na(WJC_20$abbreviation)
+  expect_equal(WJC_20$link_component, "wjc-20")
 })

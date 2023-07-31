@@ -8,10 +8,19 @@ get_league_info <- function(website) {
     rvest::html_text() %>%
     trimws()
 
+  if (length(full_name) == 0) {
+    full_name <- page %>%
+      rvest::html_elements("div[class='ep-card']") %>%
+      rvest::html_elements("div[class='row']") %>%
+      rvest::html_text() %>%
+      trimws()
+  }
+
   abbreviation <- page %>%
     rvest::html_elements("small") %>%
     rvest::html_text() %>%
     trimws()
+  if (length(abbreviation) != 1) abbreviation <- NA
 
   return(data.frame(full_name, abbreviation, link_component))
 }
