@@ -15,13 +15,13 @@ test_that("error checks", {
 
   expect_error(get_draft_players(website = "website test",
                                  draft_year = 2022),
-               "Please use either the `website` parameter, or the `draft_name` and `draft_year` parameters, not both")
+               "Please use either the `website` parameter, or the `draft_name` and `draft_year` parameter\\(s\\), not both")
 
   expect_error(get_draft_players(draft_year = 2022),
-               "Please supply both `draft_name` and `draft_year` parameters")
+               "Please supply `draft_name` and `draft_year` parameter\\(s\\)")
 
   expect_error(get_draft_players(draft_name = "NHL Entry Draft"),
-               "Please supply both `draft_name` and `draft_year` parameters")
+               "Please supply `draft_name` and `draft_year` parameter\\(s\\)")
 })
 
 

@@ -112,9 +112,9 @@
   } else if (is.null(website) & is.null(league) & is.null(season)) {
     msg <- glue::glue("Please specify either the full `website`, or the {params}")
   } else if (!is.null(website) & (!is.null(league) | !is.null(season))) {
-    msg <- glue::glue("Please use either the `website` parameter, or the {params} parameters, not both")
+    msg <- glue::glue("Please use either the `website` parameter, or the {params} parameter(s), not both")
   } else if (is.null(website) & (is.null(league) | is.null(season))) {
-    msg <- glue::glue("Please supply both {params} parameters")
+    msg <- glue::glue("Please supply {params} parameter(s)")
   }
 
   if (!is.null(msg)) {

@@ -1,4 +1,15 @@
 
+test_that("error testing", {
+  expect_error(get_league_info(league = "test"),
+               "'test' not a recognized league name. Use `league_names_crosswalk` to see a list of league names.")
+
+  expect_error(get_league_info(website = NULL, league = NULL),
+               "Please supply `league` parameter\\(s\\)")
+
+  expect_error(get_league_info(website = "test", league = "NHL"),
+               "Please use either the `website` parameter, or the `league` parameter\\(s\\), not both")
+})
+
 test_that("general testing", {
   NHL <- get_league_info(league = "NHL")
   expect_equal(NHL$full_name, "National Hockey League")
