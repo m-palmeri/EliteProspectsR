@@ -1,4 +1,11 @@
-get_league_info <- function(website) {
+get_league_info <- function(website = NULL,
+                            league = NULL) {
+
+  function_call <- match.call()
+
+  website <- .website_parameter_check(website, league, "", "league",
+                                      function_call, "")
+
   page <- rvest::read_html(website)
 
   link_component <- gsub(".*/", "", website)

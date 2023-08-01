@@ -1,6 +1,6 @@
 
 test_that("general testing", {
-  NHL <- get_league_info("https://www.eliteprospects.com/league/nhl")
+  NHL <- get_league_info(league = "NHL")
   expect_equal(NHL$full_name, "National Hockey League")
   expect_equal(NHL$abbreviation, "NHL")
   expect_equal(NHL$link_component, "nhl")
@@ -10,7 +10,7 @@ test_that("general testing", {
   expect_equal(ECHL$abbreviation, "ECHL")
   expect_equal(ECHL$link_component, "echl")
 
-  EOJHL <- get_league_info("https://www.eliteprospects.com/league/eojhl")
+  EOJHL <- get_league_info(league = "Eastern Ontario Junior Hockey League")
   expect_equal(EOJHL$full_name, "Eastern Ontario Junior Hockey League")
   expect_equal(EOJHL$abbreviation, "EOJHL")
   expect_equal(EOJHL$link_component, "eojhl")

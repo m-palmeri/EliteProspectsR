@@ -77,25 +77,32 @@
   # setting parameter names based on function call
   if (link_type == "draft") {
     params <- "`draft_name` and `draft_year`"
+  } else if (link_type == "league" & between == "") {
+    params <- "`league`"
   } else if (link_type == "league") {
     params <- "`league` and `season`"
   }
 
   msg <- NULL
 
-  # setting draft_name based on input
-  if (link_type == "draft" & !is.null(league)) {
-    match_row <- draft_names_crosswalk %>%
+  #setting name based on input to `league`
+  if (!is.null(league)) {
+    match_row <- glue::glue("{link_type}_names_crosswalk") %>%
+      get() %>%
       dplyr::mutate_all(tolower) %>%
       magrittr::equals(., tolower(league)) %>%
       rowSums()
     match_row <- which(match_row > 0)
+
     if (length(match_row) == 0) {
-      # no exact match. return an error and point the user towards draft_names_crosswalk
-      msg <- glue::glue("'{league}' not a recognized draft name. ",
-                        "Use `draft_names_crosswalk` to see a list of draft names.")
+      msg <- glue::glue("'{league}' not a recognized {link_type} name. ",
+                        "Use `{link_type}_names_crosswalk` to see a list",
+                        " of {link_type} names.")
     } else {
-      league <- draft_names_crosswalk$link_component[match_row]
+      league <- glue::glue("{link_type}_names_crosswalk") %>%
+        get() %>%
+        .$link_component %>%
+        .[match_row]
     }
   }
 
