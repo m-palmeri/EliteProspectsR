@@ -66,7 +66,8 @@
                                      season,
                                      link_type,
                                      function_call,
-                                     between) {
+                                     between,
+                                     force = F) {
   # setting league and season to NULL if only website is specified
   if ("website" %in% names(function_call) &
       all(!(c("league", "season", "draft_year", "draft_name") %in% names(function_call)))) {
@@ -86,7 +87,7 @@
   msg <- NULL
 
   #setting name based on input to `league`
-  if (!is.null(league)) {
+  if (!is.null(league) & !force) {
     match_row <- glue::glue("{link_type}_names_crosswalk") %>%
       get() %>%
       dplyr::mutate_all(tolower) %>%
@@ -96,8 +97,12 @@
 
     if (length(match_row) == 0) {
       msg <- glue::glue("'{league}' not a recognized {link_type} name. ",
-                        "Use `{link_type}_names_crosswalk` to see a list",
-                        " of {link_type} names.")
+                        "Use `{link_type}_names_crosswalk` to see a list ",
+                        "of {link_type} names. \n If you know that this ",
+                        "is a valid {link_type} name, set `Force = TRUE` ",
+                        "in the function call. Note that in this case you ",
+                        "must pass what the {link_type} name that appears ",
+                        "in the URLs. ")
     } else {
       league <- glue::glue("{link_type}_names_crosswalk") %>%
         get() %>%
@@ -112,9 +117,9 @@
   } else if (is.null(website) & is.null(league) & is.null(season)) {
     msg <- glue::glue("Please specify either the full `website`, or the {params}")
   } else if (!is.null(website) & (!is.null(league) | !is.null(season))) {
-    msg <- glue::glue("Please use either the `website` parameter, or the {params} parameter(s), not both")
+    msg <- glue::glue("Please use either `website`, or the {params}, not both")
   } else if (is.null(website) & (is.null(league) | is.null(season))) {
-    msg <- glue::glue("Please supply {params} parameter(s)")
+    msg <- glue::glue("Please supply {params}")
   }
 
   if (!is.null(msg)) {
