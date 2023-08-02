@@ -1,9 +1,11 @@
-get_league_awards <- function(website = NULL, league = "NHL") {
+get_league_awards <- function(website = NULL,
+                              league = "NHL",
+                              force = F) {
 
   function_call <- match.call()
-  if (is.null(website)) season <- "2022-2023" else season <- NULL
-  website <- .league_parameter_check(website, league, season, function_call, "/") %>%
-    gsub("/[0-9]+-[0-9]+$", "", .)
+
+  website <- .website_parameter_check(website, league, "", "league",
+                                      function_call, "", force)
 
   page <- rvest::read_html(website)
 

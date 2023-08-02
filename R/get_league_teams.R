@@ -1,7 +1,11 @@
-get_league_teams <- function(website = NULL, league = "NHL", season = "2022-2023") {
+get_league_teams <- function(website = NULL,
+                             league = NULL,
+                             season = NULL,
+                             force = F) {
 
   function_call <- match.call()
-  website <- .league_parameter_check(website, league, season, function_call, "/")
+  website <- .website_parameter_check(website, league, season, "league",
+                                      function_call, "/", force)
 
   page <- rvest::read_html(website)
 

@@ -34,7 +34,7 @@ test_that("WJC-18 2018 check", {
 
 
 test_that("WHA All-Time check", {
-  wha_alltime <- get_league_skaters(league = "WHA", season = "all-time")
+  wha_alltime <- get_league_skaters(league = "WHA", season = "all-time", force = T)
 
   comp <- load_test_rds("wha_alltime_skaters.rds")
 

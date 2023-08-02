@@ -99,9 +99,9 @@
       msg <- glue::glue("'{league}' not a recognized {link_type} name. ",
                         "Use `{link_type}_names_crosswalk` to see a list ",
                         "of {link_type} names. \n If you know that this ",
-                        "is a valid {link_type} name, set `Force = TRUE` ",
+                        "is a valid {link_type} name, set `force = TRUE` ",
                         "in the function call. Note that in this case you ",
-                        "must pass what the {link_type} name that appears ",
+                        "must pass the {link_type} name that would appear ",
                         "in the URLs. ")
     } else {
       league <- glue::glue("{link_type}_names_crosswalk") %>%
@@ -117,7 +117,7 @@
   } else if (is.null(website) & is.null(league) & is.null(season)) {
     msg <- glue::glue("Please specify either the full `website`, or the {params}")
   } else if (!is.null(website) & (!is.null(league) | !is.null(season))) {
-    msg <- glue::glue("Please use either `website`, or the {params}, not both")
+    msg <- glue::glue("Please use either `website`, or {params}, not both")
   } else if (is.null(website) & (is.null(league) | is.null(season))) {
     msg <- glue::glue("Please supply {params}")
   }

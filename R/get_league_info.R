@@ -1,10 +1,11 @@
 get_league_info <- function(website = NULL,
-                            league = NULL) {
+                            league = NULL,
+                            force = F) {
 
   function_call <- match.call()
 
   website <- .website_parameter_check(website, league, "", "league",
-                                      function_call, "")
+                                      function_call, "", force)
 
   page <- rvest::read_html(website)
 

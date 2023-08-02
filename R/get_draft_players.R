@@ -1,12 +1,13 @@
 get_draft_players <- function(website = NULL,
                               draft_name = NULL,
-                              draft_year = NULL) {
+                              draft_year = NULL,
+                              force = F) {
 
   function_call <- match.call()
 
   # getting website URL from inputs
   website <- .website_parameter_check(website, draft_name, draft_year,
-                                      "draft", function_call, "/")
+                                      "draft", function_call, "/", force)
 
   draft_year <- .get_website_id(website)
   website_league <- website %>%

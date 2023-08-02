@@ -33,7 +33,7 @@ test_that("WHL 2015 check", {
 
 
 test_that("WHA All-Time check", {
-  wha_alltime <- get_league_goalies(league = "WHA", season = "all-time")
+  wha_alltime <- get_league_goalies(league = "WHA", season = "all-time", force = T)
 
   comp <- load_test_rds("wha_alltime_goalies.rds")
 

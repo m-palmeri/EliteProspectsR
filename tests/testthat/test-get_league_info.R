@@ -4,10 +4,10 @@ test_that("error testing", {
                "'test' not a recognized league name. Use `league_names_crosswalk` to see a list of league names.")
 
   expect_error(get_league_info(website = NULL, league = NULL),
-               "Please supply `league` parameter\\(s\\)")
+               "Please supply `league`")
 
   expect_error(get_league_info(website = "test", league = "NHL"),
-               "Please use either the `website` parameter, or the `league` parameter\\(s\\), not both")
+               "Please use either `website`, or `league`, not both")
 })
 
 test_that("general testing", {
@@ -35,4 +35,9 @@ test_that("general testing", {
   expect_equal(WJC_20$full_name, "U20 World Junior Championship")
   expect_na(WJC_20$abbreviation)
   expect_equal(WJC_20$link_component, "wjc-20")
+
+  BIHL <- get_league_info(league = "bihl", force = T)
+  expect_equal(BIHL$full_name, "Bangkok Ice Hockey League")
+  expect_equal(BIHL$abbreviation, "BIHL")
+  expect_equal(BIHL$link_component, "bihl")
 })

@@ -1,7 +1,11 @@
-get_league_skaters <- function(website = NULL, league = "NHL", season = "2022-2023") {
+get_league_skaters <- function(website = NULL,
+                               league = NULL,
+                               season = NULL,
+                               force = F) {
 
   function_call <- match.call()
-  website <- .league_parameter_check(website, league, season, function_call, "/stats/")
+  website <- .website_parameter_check(website, league, season, "league",
+                                      function_call, "/stats/", force)
 
   #getting number of pages
   page <- rvest::read_html(website)
